@@ -32,6 +32,21 @@ const handleApprove = async (txid, callbackQuery) => {
 const handleReject = async (txid, callbackQuery) => {
   try {
     await db.transactions.update({ status: 'failed' }, { where: { id: txid } });
+
+    // Refund the coin back to user wallet
+    const transaction = await db.transactions.findByPk(txid);
+    if (transaction) {
+      const userWallet = await db.user_wallets.findOne({
+        where: { userId: transaction.userId }
+      });
+      if (userWallet) {
+        await db.user_wallets.update(
+          { coin: userWallet.coin + transaction.amount },
+          { where: { id: userWallet.id } }
+        );
+      }
+    }
+
     await axios.post(`https://api.telegram.org/bot${appConfig.telegramBotToken}/answerCallbackQuery`, {
       callback_query_id: callbackQuery.id,
       text: 'Transaction rejected'
