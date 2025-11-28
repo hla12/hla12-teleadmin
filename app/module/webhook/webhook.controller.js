@@ -23,7 +23,6 @@ const sendMessage = async (chatId, text) => {
 
 const handleWebhook = async (req, res) => {
   const update = req.body;
-  console.log('Received update:', JSON.stringify(update, null, 2));
 
   if (update.message) {
     const message = update.message;
