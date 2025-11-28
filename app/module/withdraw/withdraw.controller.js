@@ -35,13 +35,14 @@ const handleWithdraw = async (req, res) => {
     // Send message to group with approve/reject buttons
     const address = transaction.additional_info?.address || 'N/A';
     const user = await db.users.findByPk(transaction.userId);
-    const messageText = `New withdrawal request:\nUser ID: ${transaction.userId}\nUsername: ${user.username}\nAmount: ${transaction.amount}\nAddress: ${address}\nTransaction ID: ${unique_id}`;
+    const amountUSDT = transaction.amount / 100;
+    const messageText = `🚨 <b>New Withdrawal Request</b> 🚨\n\n👤 User ID: ${transaction.userId}\n👨 Username: ${user.username}\n💰 Amount: ${amountUSDT} USDT\n🏠 Address: <a href="https://bscscan.com/address/${address}">${address}</a>`;
 
     const replyMarkup = {
       inline_keyboard: [
         [
-          { text: 'Approve', callback_data: `approve_${unique_id}` },
-          { text: 'Reject', callback_data: `reject_${unique_id}` }
+          { text: '✅ Approve', callback_data: `approve_${unique_id}` },
+          { text: '❌ Reject', callback_data: `reject_${unique_id}` }
         ]
       ]
     };
