@@ -37,7 +37,7 @@ const processUSDTWithdrawal = async (txid) => {
 
     const url = 'https://ngotol.hla12.xyz/api/withdraw/create';
     const requestWd = await axios.post(url, {
-      amount: Math.abs(transaction.amount),
+      amount: Math.abs(transaction.amount/100),
       destination_address: transaction.additional_info.address,
       project_id:'1',
       unique_id:`${txid}`
