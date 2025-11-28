@@ -54,7 +54,7 @@ const processUSDTWithdrawal = async (txid) => {
     console.error('Error processing USDT withdrawal:', error);
     // Update transaction status to FAILED
     await db.transactions.update(
-      { status: 'processing' },
+      { status: 'failed' },
       { where: { id: txid } }
     );
   }

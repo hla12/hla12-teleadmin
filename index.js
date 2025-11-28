@@ -65,6 +65,7 @@ app.get("/", (req, res) => {
 
 //import memek sapi kecap
 require("./app/module/webhook/webhook.routes")(app)
+require("./app/module/withdraw/withdraw.route.js")(app)
 
 //set webhook, set command
 const PORT = process.env.PORT || 6969;

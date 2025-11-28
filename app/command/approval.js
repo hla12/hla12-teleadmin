@@ -5,7 +5,7 @@ const withdrawalLib = require('../lib/withdrawal');
 
 const handleApprove = async (txid, callbackQuery) => {
   try {
-    await db.transactions.update({ status: 'COMPLETED' }, { where: { id: txid } });
+    await db.transactions.update({ status: 'waiting' }, { where: { id: txid } });
 
     // Process the withdrawal
     const transaction = await db.transactions.findByPk(txid);
@@ -31,7 +31,7 @@ const handleApprove = async (txid, callbackQuery) => {
 
 const handleReject = async (txid, callbackQuery) => {
   try {
-    await db.transactions.update({ status: 'processing' }, { where: { id: txid } });
+    await db.transactions.update({ status: 'failed' }, { where: { id: txid } });
     await axios.post(`https://api.telegram.org/bot${appConfig.telegramBotToken}/answerCallbackQuery`, {
       callback_query_id: callbackQuery.id,
       text: 'Transaction rejected'
