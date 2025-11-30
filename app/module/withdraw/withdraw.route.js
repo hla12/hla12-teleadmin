@@ -1,7 +1,7 @@
 const controller = require("./withdraw.controller");
 
 const accessKeyMiddleware = (req, res, next) => {
-  const accessKey = req.headers['Access-Key'];
+  const accessKey = req.headers['access-key'];
   if (accessKey !== 'memeksapikecap') {
     return res.status(401).json({ error: 'Unauthorized' });
   }
