@@ -49,7 +49,13 @@ const handleWithdraw = async (req, res) => {
 
     await sendMessage(appConfig.telegramGroupId, messageText, replyMarkup);
 
-    res.status(200).json({ success: true, transactionId: unique_id });
+    res.status(200).json({ 
+      success: true, 
+      data: {
+        withdrawalId: unique_id 
+      },
+      message: 'Withdrawal request sent for approval'
+    });
   } catch (error) {
     console.error('Error handling withdraw:', error);
     res.status(500).json({ error: 'Internal server error' });
