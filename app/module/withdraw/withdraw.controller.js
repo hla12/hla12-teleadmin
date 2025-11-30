@@ -19,16 +19,26 @@ const sendMessage = async (chatId, text, replyMarkup = null) => {
 };
 
 const handleWithdraw = async (req, res) => {
+  console.log('Withdraw endpoint hit - Request:', {
+    headers: req.headers,
+    body: req.body,
+    method: req.method,
+    url: req.url,
+    timestamp: new Date().toISOString()
+  });
+
   try {
     const { unique_id } = req.body;
 
     if (!unique_id) {
+      console.log('Withdraw endpoint - Response: 400 Bad Request - Missing unique_id');
       return res.status(400).json({ error: 'Missing required field: unique_id' });
     }
 
     // Find transaction by id
     const transaction = await db.transactions.findByPk(unique_id);
     if (!transaction) {
+      console.log('Withdraw endpoint - Response: 404 Not Found - Transaction not found for unique_id:', unique_id);
       return res.status(404).json({ error: 'Transaction not found' });
     }
 
@@ -49,6 +59,7 @@ const handleWithdraw = async (req, res) => {
 
     await sendMessage(appConfig.telegramGroupId, messageText, replyMarkup);
 
+    console.log('Withdraw endpoint - Response: 200 Success - Transaction ID:', unique_id);
     res.status(200).json({ 
       success: true, 
       data: {
@@ -58,6 +69,7 @@ const handleWithdraw = async (req, res) => {
     });
   } catch (error) {
     console.error('Error handling withdraw:', error);
+    console.log('Withdraw endpoint - Response: 500 Internal Server Error');
     res.status(500).json({ error: 'Internal server error' });
   }
 };

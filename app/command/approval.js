@@ -40,10 +40,7 @@ const handleReject = async (txid, callbackQuery) => {
         where: { userId: transaction.userId }
       });
       if (userWallet) {
-        await db.user_wallets.update(
-          { coin: userWallet.coin + transaction.amount },
-          { where: { id: userWallet.id } }
-        );
+        userWallet.increment('coin', { by: transaction.amount });
       }
     }
 
